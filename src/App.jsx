@@ -4,6 +4,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import LoginPage from "./pages/Login/LoginPage";
 import RetailInvoicePage from "./pages/RetailInvoice/RetailInvoicePage";
 import UserManagementPage from "./pages/Users/UserManagementPage";
+import ProfilePage from "./pages/Profile/ProfilePage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/invoices/:id" element={<RetailInvoicePage mode="view" />} />
           <Route path="/invoices/:id/edit" element={<RetailInvoicePage mode="edit" />} />
           <Route path="/users" element={<UserManagementPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/" element={<Navigate to="/invoices" replace />} />
         </Route>
       </Route>

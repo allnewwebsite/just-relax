@@ -86,9 +86,9 @@ export default function RetailInvoicePage({ mode }) {
         <button onClick={downloadPdf} className="secondary-button"><Download size={16}/> PDF</button>
         {!viewing && <button onClick={handleSubmit(save)} disabled={saving} className="primary-button"><Save size={16}/>{saving ? "Saving…" : "Save invoice"}</button>}
       </div>
-      <div className="no-print grid items-start gap-6 p-4 xl:grid-cols-[minmax(360px,520px)_minmax(600px,1fr)] xl:p-7">
+      <div className="no-print grid min-w-0 items-start gap-[clamp(1rem,1.6vw,1.5rem)] p-[clamp(1rem,1.8vw,1.75rem)] min-[1180px]:grid-cols-[minmax(320px,38%)_minmax(0,62%)]">
         <InvoiceForm register={register} errors={errors} disabled={viewing} getValues={getValues} />
-        <div className="overflow-auto rounded-2xl border border-slate-200 bg-slate-200/60 p-4 shadow-card xl:sticky xl:top-36"><InvoicePreview ref={previewRef} data={data} /></div>
+        <div className="min-w-0 overflow-auto rounded-2xl border border-slate-200 bg-slate-200/60 p-[clamp(.5rem,1.2vw,1rem)] shadow-card min-[1180px]:sticky min-[1180px]:top-36"><InvoicePreview ref={previewRef} data={data} /></div>
       </div>
       <div className="print-only"><InvoicePreview data={data} /></div>
     </div>
