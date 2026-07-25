@@ -27,7 +27,15 @@ export default function RetailInvoicePage({ mode }) {
   }, []);
   useEffect(() => { if (!mode) loadInvoices(); }, [mode, loadInvoices]);
   useEffect(() => {
-    if (id) api.get(`/invoices/${id}`).then(({ data: invoice }) => reset(invoice)).catch(() => setMessage("Invoice could not be loaded."));
+    if (mode === "new" && !id) reset({ ...defaultInvoice });
+  }, [mode, id, reset]);
+  useEffect(() => {
+    if (id) api.get(`/invoices/${id}`).then(({ data: invoice }) => reset({
+      ...defaultInvoice,
+      ...invoice,
+      dealerName: invoice.dealerName || defaultInvoice.dealerName,
+      dealerGst: invoice.dealerGst || defaultInvoice.dealerGst,
+    })).catch(() => setMessage("Invoice could not be loaded."));
   }, [id, reset]);
 
   const save = async (values) => {
