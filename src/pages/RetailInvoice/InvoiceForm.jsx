@@ -1,8 +1,11 @@
+import { memo } from "react";
 import { ChevronDown } from "lucide-react";
+import { useFormState } from "react-hook-form";
 import { sections } from "./invoiceFields";
 import { calculateInvoice, formatIndianCurrency, parseCurrency } from "../../utils/invoiceCalculator";
 
-export default function InvoiceForm({ register, errors, disabled, getValues }) {
+function InvoiceForm({ register, control, disabled, getValues }) {
+  const { errors } = useFormState({ control });
   return (
     <div className="space-y-4">
       {sections.map((section, index) => (
@@ -52,3 +55,5 @@ export default function InvoiceForm({ register, errors, disabled, getValues }) {
     </div>
   );
 }
+
+export default memo(InvoiceForm);

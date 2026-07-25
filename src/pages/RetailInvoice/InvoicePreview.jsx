@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import { formatIndianCurrency } from "../../utils/invoiceCalculator";
 
 const Value = ({ children }) => <span className="reference-value">: {children || "\u00a0"}</span>;
 const vehicleText = (data) => [data.vehicleDescription, data.variant, data.colour].filter(Boolean).join(" ");
 const money = (value) => value === "" || value == null ? "" : formatIndianCurrency(value);
 
-const InvoicePreview = forwardRef(function InvoicePreview({ data }, ref) {
+const InvoicePreview = memo(forwardRef(function InvoicePreview({ data }, ref) {
   return (
     <div ref={ref} className="invoice-paper" id="invoice-print">
       <h1 className="reference-title">Retail Invoice</h1>
@@ -70,5 +70,5 @@ const InvoicePreview = forwardRef(function InvoicePreview({ data }, ref) {
       </div>
     </div>
   );
-});
+}));
 export default InvoicePreview;
