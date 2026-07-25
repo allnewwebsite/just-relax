@@ -1,5 +1,5 @@
 export const defaultInvoice = {
-  dealerName: "", dealerGst: "06AADCD9217A1Z3", customerGst: "", customerName: "", customerAddress: "", customerId: "",
+  dealerName: "DRISHTI MOTORS PVT. LTD.", dealerGst: "06AADCD9217A1Z3", customerGst: "", customerName: "", customerAddress: "", customerId: "",
   panNumber: "", invoiceNumber: "", invoiceDate: "", financedBy: "", vehicleDescription: "",
   variant: "", colour: "", state: "Delhi", invoiceTotal: "", priceOfOne: "", discount: "0", netSellingPrice: "", igst: "", igstAmount: "",
   cgst: "", cgstAmount: "", sgst: "", sgstAmount: "", totalGst: "", compensationCess: "0", otherCharges: "0",
