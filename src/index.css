@@ -92,28 +92,18 @@
   width: 210mm;
   height: 297mm;
   min-height: 297mm;
-  padding: var(--invoice-top-margin) 14mm 8mm;
+  padding: var(--invoice-top-margin) 0 12mm;
   overflow: hidden;
   box-shadow: none;
 }
 .invoice-paper.pdf-export .invoice-content {
-  width: calc(100% / var(--invoice-export-scale));
+  width: 182mm;
+  margin-inline: auto;
   break-inside: avoid;
   page-break-inside: avoid;
   transform: scale(var(--invoice-export-scale));
-  transform-origin: top left;
+  transform-origin: top center;
 }
-.invoice-paper.pdf-export .reference-gst { margin-top: 3mm; }
-.invoice-paper.pdf-export .reference-customer { margin-top: 8mm; }
-.invoice-paper.pdf-export .reference-customer .address-row { min-height: 16mm; }
-.invoice-paper.pdf-export .reference-main-table thead th { height: 8mm; }
-.invoice-paper.pdf-export .reference-main-table tbody td { height: 6mm; }
-.invoice-paper.pdf-export .reference-main-table .reference-spacer td { height: 8mm; }
-.invoice-paper.pdf-export .amount-words { min-height: 8mm; }
-.invoice-paper.pdf-export .vehicle-heading { margin-bottom: 2mm; }
-.invoice-paper.pdf-export .reference-vehicle-table td { height: 8mm; }
-.invoice-paper.pdf-export .reference-signatures { margin-top: 9mm; }
-.invoice-paper.pdf-export .reference-signatures > div { min-height: 11mm; }
 
 @media print {
   @page { size: A4 portrait; margin: 0; }
@@ -128,7 +118,7 @@
     width: 210mm;
     height: 297mm;
     min-height: 297mm;
-    padding: var(--invoice-top-margin) 14mm 8mm;
+    padding: var(--invoice-top-margin) 0 12mm;
     overflow: hidden;
     box-shadow: none;
     break-after: avoid;
@@ -137,21 +127,11 @@
     page-break-inside: avoid;
   }
   .invoice-content {
-    width: calc(100% / var(--invoice-export-scale));
+    width: 182mm;
+    margin-inline: auto;
     break-inside: avoid;
     page-break-inside: avoid;
     transform: scale(var(--invoice-export-scale));
-    transform-origin: top left;
+    transform-origin: top center;
   }
-  .reference-gst { margin-top: 3mm; }
-  .reference-customer { margin-top: 8mm; }
-  .reference-customer .address-row { min-height: 16mm; }
-  .reference-main-table thead th { height: 8mm; }
-  .reference-main-table tbody td { height: 6mm; }
-  .reference-main-table .reference-spacer td { height: 8mm; }
-  .amount-words { min-height: 8mm; }
-  .vehicle-heading { margin-bottom: 2mm; }
-  .reference-vehicle-table td { height: 8mm; }
-  .reference-signatures { margin-top: 9mm; }
-  .reference-signatures > div { min-height: 11mm; }
 }
