@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --invoice-top-margin: 60mm;
+  --invoice-export-scale: 1;
+}
+
 @layer base {
   * { box-sizing: border-box; }
   html, body, #root { min-width: 0; width: 100%; }
@@ -47,6 +52,7 @@
 @keyframes dialog-scale { from { opacity: 0; transform: scale(.96); } }
 
 .invoice-paper { width: 210mm; min-height: 297mm; margin: 0 auto; background: white; color: #111; padding: 29mm 14mm 18mm; font-family: "Times New Roman", Times, serif; font-size: 11px; line-height: 1.25; box-shadow: 0 4px 20px rgba(15,23,42,.08); }
+.invoice-content { width: 100%; }
 .reference-title { margin: 0; padding: 3px 0; border-top: 1px solid #222; border-bottom: 1px solid #222; text-align: center; font-size: 14px; font-weight: bold; }
 .reference-gst { display: grid; grid-template-columns: 65% 35%; margin-top: 4mm; }
 .reference-gst > div, .reference-customer > div > div { display: grid; grid-template-columns: 35mm 1fr; min-height: 8mm; align-items: start; }
@@ -82,6 +88,33 @@
 .reference-signatures span { width: 75%; padding-top: 1px; border-bottom: 1px solid #222; }
 .reference-signatures > div:last-child span { width: 45%; text-align: center; }
 
+.invoice-paper.pdf-export {
+  width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  padding: var(--invoice-top-margin) 14mm 8mm;
+  overflow: hidden;
+  box-shadow: none;
+}
+.invoice-paper.pdf-export .invoice-content {
+  width: calc(100% / var(--invoice-export-scale));
+  break-inside: avoid;
+  page-break-inside: avoid;
+  transform: scale(var(--invoice-export-scale));
+  transform-origin: top left;
+}
+.invoice-paper.pdf-export .reference-gst { margin-top: 3mm; }
+.invoice-paper.pdf-export .reference-customer { margin-top: 8mm; }
+.invoice-paper.pdf-export .reference-customer .address-row { min-height: 16mm; }
+.invoice-paper.pdf-export .reference-main-table thead th { height: 8mm; }
+.invoice-paper.pdf-export .reference-main-table tbody td { height: 6mm; }
+.invoice-paper.pdf-export .reference-main-table .reference-spacer td { height: 8mm; }
+.invoice-paper.pdf-export .amount-words { min-height: 8mm; }
+.invoice-paper.pdf-export .vehicle-heading { margin-bottom: 2mm; }
+.invoice-paper.pdf-export .reference-vehicle-table td { height: 8mm; }
+.invoice-paper.pdf-export .reference-signatures { margin-top: 9mm; }
+.invoice-paper.pdf-export .reference-signatures > div { min-height: 11mm; }
+
 @media print {
   @page { size: A4 portrait; margin: 0; }
   body { background: white !important; }
@@ -91,5 +124,34 @@
   .invoice-editor-grid { display: block !important; padding: 0 !important; }
   .invoice-preview-host { overflow: visible !important; border: 0 !important; border-radius: 0 !important; background: white !important; padding: 0 !important; }
   main { padding: 0 !important; }
-  .invoice-paper { width: 210mm; height: 297mm; min-height: 0; padding: 10mm; box-shadow: none; page-break-after: avoid; overflow: hidden; }
+  .invoice-paper {
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    padding: var(--invoice-top-margin) 14mm 8mm;
+    overflow: hidden;
+    box-shadow: none;
+    break-after: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  .invoice-content {
+    width: calc(100% / var(--invoice-export-scale));
+    break-inside: avoid;
+    page-break-inside: avoid;
+    transform: scale(var(--invoice-export-scale));
+    transform-origin: top left;
+  }
+  .reference-gst { margin-top: 3mm; }
+  .reference-customer { margin-top: 8mm; }
+  .reference-customer .address-row { min-height: 16mm; }
+  .reference-main-table thead th { height: 8mm; }
+  .reference-main-table tbody td { height: 6mm; }
+  .reference-main-table .reference-spacer td { height: 8mm; }
+  .amount-words { min-height: 8mm; }
+  .vehicle-heading { margin-bottom: 2mm; }
+  .reference-vehicle-table td { height: 8mm; }
+  .reference-signatures { margin-top: 9mm; }
+  .reference-signatures > div { min-height: 11mm; }
 }

@@ -8,6 +8,7 @@ const money = (value) => value === "" || value == null ? "" : formatIndianCurren
 const InvoicePreview = memo(forwardRef(function InvoicePreview({ data }, ref) {
   return (
     <div ref={ref} className="invoice-paper" id="invoice-print">
+      <div className="invoice-content">
       <h1 className="reference-title">Retail Invoice</h1>
       <div className="reference-gst">
         <div><span>Dealer GST</span><Value>{data.dealerGst}</Value></div>
@@ -67,6 +68,7 @@ const InvoicePreview = memo(forwardRef(function InvoicePreview({ data }, ref) {
           <strong>{data.authorizedSignature || "\u00a0"}</strong>
           <span>Authorised Signatory</span>
         </div>
+      </div>
       </div>
     </div>
   );

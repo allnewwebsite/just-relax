@@ -38,6 +38,27 @@ export default function RetailInvoicePage({ mode }) {
     })).catch(() => setMessage("Invoice could not be loaded."));
   }, [id, reset]);
 
+  const setExportScale = useCallback((paper) => {
+    if (!paper) return;
+    const content = paper.querySelector(".invoice-content");
+    const topMargin = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--invoice-top-margin")) || 60;
+    const pixelsPerMm = paper.getBoundingClientRect().width / 210;
+    const availableHeight = (297 - topMargin - 8) * pixelsPerMm;
+    const scale = Math.min(1, Math.max(0.9, availableHeight / content.scrollHeight));
+    paper.style.setProperty("--invoice-export-scale", scale.toFixed(4));
+  }, []);
+
+  useEffect(() => {
+    const preparePrint = () => setExportScale(previewRef.current);
+    const cleanupPrint = () => previewRef.current?.style.removeProperty("--invoice-export-scale");
+    window.addEventListener("beforeprint", preparePrint);
+    window.addEventListener("afterprint", cleanupPrint);
+    return () => {
+      window.removeEventListener("beforeprint", preparePrint);
+      window.removeEventListener("afterprint", cleanupPrint);
+    };
+  }, [setExportScale]);
+
   const save = async (values) => {
     try {
       setSaving(true);
@@ -58,12 +79,20 @@ export default function RetailInvoicePage({ mode }) {
       import("html2canvas"),
       import("jspdf"),
     ]);
-    const canvas = await html2canvas(previewRef.current, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
-    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    const width = 210; const height = canvas.height * width / canvas.width;
-    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, width, Math.min(height, 297));
-    pdf.save(`${getValues("invoiceNumber") || "invoice"}.pdf`);
-  }, [getValues]);
+    const paper = previewRef.current;
+    paper.classList.add("pdf-export");
+    setExportScale(paper);
+    try {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const canvas = await html2canvas(paper, { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
+      pdf.save(`${getValues("invoiceNumber") || "invoice"}.pdf`);
+    } finally {
+      paper.classList.remove("pdf-export");
+      paper.style.removeProperty("--invoice-export-scale");
+    }
+  }, [getValues, setExportScale]);
   if (!mode) return <InvoiceList invoices={invoices} loading={loading} search={search} onSearch={setSearch} onDelete={remove} />;
   const viewing = mode === "view";
   return (
