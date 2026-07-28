@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, FileText, Users } from "lucide-react";
+import { CarFront, ChevronLeft, ChevronRight, FileText, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import HeaderUserMenu from "../components/HeaderUserMenu";
@@ -26,6 +26,7 @@ export default function DashboardLayout() {
         </button>
         {!collapsed && <p className="px-3 pb-3 pt-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">Workspace</p>}
         <NavLink to="/invoices" title={collapsed ? "Retail Invoice" : undefined} className={({isActive}) => `sidebar-link ${collapsed ? "justify-center px-0" : ""} ${isActive ? "sidebar-link-active" : ""}`}><FileText size={18} /><span className={collapsed ? "hidden" : ""}>Retail Invoice</span></NavLink>
+        <NavLink to="/available-stock" title={collapsed ? "Available Stock" : undefined} className={({isActive}) => `sidebar-link mt-1 ${collapsed ? "justify-center px-0" : ""} ${isActive ? "sidebar-link-active" : ""}`}><CarFront size={18} /><span className={collapsed ? "hidden" : ""}>Available Stock</span></NavLink>
         {profile?.role === "admin" && <NavLink to="/users" title={collapsed ? "User Management" : undefined} className={({isActive}) => `sidebar-link mt-1 ${collapsed ? "justify-center px-0" : ""} ${isActive ? "sidebar-link-active" : ""}`}><Users size={18} /><span className={collapsed ? "hidden" : ""}>User Management</span></NavLink>}
       </aside>
       <main className={`min-w-0 overflow-x-hidden pt-16 transition-[padding] duration-200 ${collapsed ? "lg:pl-[72px]" : "lg:pl-60"}`}><Outlet /></main>

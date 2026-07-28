@@ -7,6 +7,7 @@ const LoginPage = lazy(() => import("./pages/Login/LoginPage"));
 const RetailInvoicePage = lazy(() => import("./pages/RetailInvoice/RetailInvoicePage"));
 const UserManagementPage = lazy(() => import("./pages/Users/UserManagementPage"));
 const ProfilePage = lazy(() => import("./pages/Profile/ProfilePage"));
+const AvailableStockPage = lazy(() => import("./pages/AvailableStock/AvailableStockPage"));
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/invoices/:id/edit" element={<RetailInvoicePage mode="edit" />} />
             <Route path="/users" element={<UserManagementPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/available-stock" element={<AvailableStockPage />} />
             <Route path="/" element={<Navigate to="/invoices" replace />} />
           </Route>
         </Route>

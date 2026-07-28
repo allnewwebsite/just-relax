@@ -6,6 +6,7 @@ import { rateLimit } from "express-rate-limit";
 import { requireAuth } from "./middleware/auth.js";
 import invoiceRoutes from "./routes/invoices.js";
 import userRoutes from "./routes/users.js";
+import stockRoutes from "./routes/stock.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -22,6 +23,7 @@ app.use("/api", rateLimit({
 }));
 app.use("/api/invoices", requireAuth, invoiceRoutes);
 app.use("/api/users", requireAuth, userRoutes);
+app.use("/api/available-stock", requireAuth, stockRoutes);
 app.use((error, _req, res, _next) => {
   console.error(error);
   res.status(500).json({ message: process.env.NODE_ENV === "production" ? "Something went wrong." : error.message });
