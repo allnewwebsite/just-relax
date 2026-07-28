@@ -46,10 +46,13 @@ export async function createStockVehicle(req, res, next) {
     const duplicate = await collection().where("vinNumber", "==", vehicle.vinNumber).limit(1).get();
     if (!duplicate.empty) return res.status(409).json({ message: "A vehicle with this VIN Number already exists." });
     const now = new Date();
-    const doc = await collection().add({
+    const record = {
       ...vehicle, status: "Available", createdAt: now, updatedAt: now, createdBy: req.user.uid,
+    };
+    const doc = await collection().add(record);
+    res.status(201).json({
+      id: doc.id, ...record, createdAt: now.toISOString(), updatedAt: now.toISOString(),
     });
-    res.status(201).json({ id: doc.id });
   } catch (error) { next(error); }
 }
 
@@ -65,8 +68,17 @@ export async function updateStockVehicle(req, res, next) {
     if (duplicate.docs.some((doc) => doc.id !== req.params.id)) {
       return res.status(409).json({ message: "A vehicle with this VIN Number already exists." });
     }
-    await ref.update({ ...vehicle, status: "Available", updatedAt: new Date() });
-    res.json({ id: ref.id });
+    const now = new Date();
+    const changes = { ...vehicle, status: "Available", updatedAt: now };
+    await ref.update(changes);
+    const previous = existing.data();
+    res.json({
+      id: ref.id,
+      ...previous,
+      ...changes,
+      createdAt: previous.createdAt?.toDate?.().toISOString() || previous.createdAt,
+      updatedAt: now.toISOString(),
+    });
   } catch (error) { next(error); }
 }
 
