@@ -1,8 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { CarFront, Edit3, Eye, Plus, Search, Trash2 } from "lucide-react";
 import api from "../../services/api";
 import VehicleDialog from "./VehicleDialog";
 import { formatStockDate, HYUNDAI_MODELS, MODEL_TAB_ORDER } from "./stockConfig";
+
+const ModelStockSection = memo(function ModelStockSection({ model, vehicles, onView, onEdit, onRemove }) {
+  return <section className="stock-model-section">
+    <header className="stock-model-heading"><h2>{model}</h2><span>{vehicles.length}</span></header>
+    <div className="overflow-x-auto">
+      <table className="stock-table">
+        <colgroup><col className="stock-col-serial"/><col className="stock-col-register"/><col className="stock-col-vin"/><col className="stock-col-engine"/><col className="stock-col-key"/><col className="stock-col-color"/><col className="stock-col-variant"/><col className="stock-col-age"/><col className="stock-col-hold"/><col className="stock-col-pdi"/><col className="stock-col-actions"/></colgroup>
+        <thead><tr><th>S.No.</th><th>Register No.</th><th>VIN No.</th><th>Engine No.</th><th>Key No.</th><th>Color</th><th>Variant</th><th>Vehicle Age</th><th>Hold By</th><th>PDI Status</th><th>Actions</th></tr></thead>
+        <tbody>{vehicles.length === 0 ? <tr><td colSpan="11" className="py-10 text-center text-slate-400">No {model} vehicles available.</td></tr> : vehicles.map((vehicle, index) => <tr key={vehicle.id}><td className="font-semibold tabular-nums text-slate-400">{index + 1}</td><td title={vehicle.registerNumber} className="font-semibold text-slate-800">{vehicle.registerNumber}</td><td title={vehicle.vinNumber}>{vehicle.vinNumber}</td><td title={vehicle.engineNumber}>{vehicle.engineNumber}</td><td title={vehicle.keyNumber}>{vehicle.keyNumber}</td><td title={vehicle.color}>{vehicle.color}</td><td title={vehicle.variant}>{vehicle.variant}</td><td title={formatStockDate(vehicle.vehicleAge)}>{formatStockDate(vehicle.vehicleAge)}</td><td title={vehicle.holdBy || "—"}>{vehicle.holdBy || "—"}</td><td><span className={`stock-badge ${vehicle.pdiStatus === "Done" ? "stock-badge-blue" : "stock-badge-amber"}`}>{vehicle.pdiStatus}</span></td><td><div className="flex justify-center gap-1"><button className="table-action" onClick={() => onView(vehicle)} title="View"><Eye size={16}/></button><button className="table-action" onClick={() => onEdit(vehicle)} title="Edit"><Edit3 size={16}/></button><button className="table-action hover:text-red-600" onClick={() => onRemove(vehicle)} title="Remove"><Trash2 size={16}/></button></div></td></tr>)}</tbody>
+      </table>
+    </div>
+  </section>;
+});
 
 export default function AvailableStockPage() {
   const [vehicles, setVehicles] = useState([]);
@@ -32,18 +45,19 @@ export default function AvailableStockPage() {
       return searchable && (!carModel || vehicle.carModel === carModel);
     });
   }, [vehicles, search, carModel]);
-  const modelCounts = useMemo(() => {
-    const counts = Object.fromEntries(MODEL_TAB_ORDER.map((model) => [model, 0]));
-    vehicles.forEach((vehicle) => {
-      if (Object.hasOwn(counts, vehicle.carModel)) counts[vehicle.carModel] += 1;
-    });
-    return counts;
-  }, [vehicles]);
+  const groupedVehicles = useMemo(() => {
+    const groups = Object.fromEntries(MODEL_TAB_ORDER.map((model) => [model, []]));
+    filtered.forEach((vehicle) => groups[vehicle.carModel]?.push(vehicle));
+    return groups;
+  }, [filtered]);
+  const displayedModels = useMemo(() => carModel ? [carModel] : MODEL_TAB_ORDER, [carModel]);
   const openDialog = useCallback((mode, vehicle = null) => {
     setDialogError("");
     setDialog({ open: true, mode, vehicle });
   }, []);
   const closeDialog = useCallback(() => setDialog((current) => ({ ...current, open: false })), []);
+  const viewVehicle = useCallback((vehicle) => openDialog("view", vehicle), [openDialog]);
+  const editVehicle = useCallback((vehicle) => openDialog("edit", vehicle), [openDialog]);
   const saveVehicle = useCallback(async (values) => {
     try {
       setSaving(true); setDialogError("");
@@ -77,16 +91,8 @@ export default function AvailableStockPage() {
         <div className="relative w-full sm:w-auto sm:min-w-[280px]"><Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/><input value={search} onChange={(event) => setSearch(event.target.value)} className="field-input pl-10" placeholder="Search vehicle…"/></div>
         <select value={carModel} onChange={(event) => setCarModel(event.target.value)} className="field-input w-full sm:w-48"><option value="">All Models</option>{HYUNDAI_MODELS.map((value) => <option key={value}>{value}</option>)}</select>
       </div>
-      <nav className="stock-model-tabs" aria-label="Filter stock by Hyundai model">
-        <button type="button" onClick={() => setCarModel("")} className={`stock-model-tab ${carModel === "" ? "stock-model-tab-active" : ""}`} aria-pressed={carModel === ""}>ALL <span>({vehicles.length})</span></button>
-        {MODEL_TAB_ORDER.map((model) => <button type="button" key={model} onClick={() => setCarModel(model)} className={`stock-model-tab ${carModel === model ? "stock-model-tab-active" : ""}`} aria-pressed={carModel === model}>{model} <span>({modelCounts[model]})</span></button>)}
-      </nav>
-      <div className="overflow-x-auto">
-        <table className="stock-table">
-          <colgroup><col className="stock-col-serial"/><col className="stock-col-location"/><col className="stock-col-register"/><col className="stock-col-model"/><col className="stock-col-vin"/><col className="stock-col-engine"/><col className="stock-col-key"/><col className="stock-col-color"/><col className="stock-col-variant"/><col className="stock-col-age"/><col className="stock-col-hold"/><col className="stock-col-pdi"/><col className="stock-col-actions"/></colgroup>
-          <thead><tr><th>S.No.</th><th>Location</th><th>Register No.</th><th>Car Model</th><th>VIN No.</th><th>Engine No.</th><th>Key No.</th><th>Color</th><th>Variant</th><th>Vehicle Age</th><th>Hold By</th><th>PDI Status</th><th>Actions</th></tr></thead>
-          <tbody>{loading ? <tr><td colSpan="13" className="py-16 text-center text-slate-400">Loading available stock…</td></tr> : filtered.length === 0 ? <tr><td colSpan="13" className="py-16 text-center"><CarFront size={28} className="mx-auto mb-2 text-slate-300"/><p className="font-semibold text-slate-600">{carModel ? `No ${carModel} vehicles available.` : vehicles.length ? "No matching vehicles" : "No vehicles in available stock"}</p><p className="mt-1 text-sm text-slate-400">{carModel ? (search ? "No vehicles in this model match your search." : "Add a vehicle or select another model.") : vehicles.length ? "Adjust your search." : "Add the first vehicle to get started."}</p></td></tr> : filtered.map((vehicle, index) => <tr key={vehicle.id}><td className="font-semibold tabular-nums text-slate-400">{index + 1}</td><td title={vehicle.location}>{vehicle.location}</td><td title={vehicle.registerNumber} className="font-semibold text-slate-800">{vehicle.registerNumber}</td><td title={vehicle.carModel}>{vehicle.carModel}</td><td title={vehicle.vinNumber}>{vehicle.vinNumber}</td><td title={vehicle.engineNumber}>{vehicle.engineNumber}</td><td title={vehicle.keyNumber}>{vehicle.keyNumber}</td><td title={vehicle.color}>{vehicle.color}</td><td title={vehicle.variant}>{vehicle.variant}</td><td title={formatStockDate(vehicle.vehicleAge)}>{formatStockDate(vehicle.vehicleAge)}</td><td title={vehicle.holdBy || "—"}>{vehicle.holdBy || "—"}</td><td><span className={`stock-badge ${vehicle.pdiStatus === "Done" ? "stock-badge-blue" : "stock-badge-amber"}`}>{vehicle.pdiStatus}</span></td><td><div className="flex justify-center gap-1"><button className="table-action" onClick={() => openDialog("view", vehicle)} title="View"><Eye size={16}/></button><button className="table-action" onClick={() => openDialog("edit", vehicle)} title="Edit"><Edit3 size={16}/></button><button className="table-action hover:text-red-600" onClick={() => setRemoveTarget(vehicle)} title="Remove"><Trash2 size={16}/></button></div></td></tr>)}</tbody>
-        </table>
+      <div className="space-y-4 bg-slate-50/60 p-4">
+        {loading ? <div className="rounded-xl border border-slate-200 bg-white py-16 text-center text-sm text-slate-400">Loading available stock…</div> : search && filtered.length === 0 ? <div className="rounded-xl border border-slate-200 bg-white py-16 text-center"><CarFront size={28} className="mx-auto mb-2 text-slate-300"/><p className="font-semibold text-slate-600">No matching vehicles</p><p className="mt-1 text-sm text-slate-400">No vehicles in the selected model match your search.</p></div> : displayedModels.map((model) => <ModelStockSection key={model} model={model} vehicles={groupedVehicles[model]} onView={viewVehicle} onEdit={editVehicle} onRemove={setRemoveTarget}/>)}
       </div>
     </section>
     <VehicleDialog {...dialog} saving={saving} serverError={dialogError} onClose={closeDialog} onSave={saveVehicle}/>
