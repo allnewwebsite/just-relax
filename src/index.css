@@ -92,7 +92,7 @@
   width: 210mm;
   height: 297mm;
   min-height: 297mm;
-  padding: var(--invoice-top-margin) 0 12mm;
+  padding: var(--invoice-top-margin) 0 8mm;
   overflow: hidden;
   box-shadow: none;
 }
@@ -103,7 +103,22 @@
   page-break-inside: avoid;
   transform: scale(var(--invoice-export-scale));
   transform-origin: top center;
+  font-size: 12px;
 }
+.invoice-paper.pdf-export .reference-title { font-size: 16px; }
+.invoice-paper.pdf-export .reference-gst { margin-top: 3mm; }
+.invoice-paper.pdf-export .reference-customer { margin-top: 9mm; }
+.invoice-paper.pdf-export .reference-gst > div,
+.invoice-paper.pdf-export .reference-customer > div > div { min-height: 7mm; }
+.invoice-paper.pdf-export .reference-customer .address-row { min-height: 18mm; }
+.invoice-paper.pdf-export .reference-main-table thead th { height: 11mm; font-size: 13px; }
+.invoice-paper.pdf-export .reference-main-table tbody td { height: 8.8mm; padding-block: 3px; font-size: 12px; }
+.invoice-paper.pdf-export .reference-main-table tfoot th,
+.invoice-paper.pdf-export .reference-main-table tfoot td { height: 5.5mm; font-size: 12px; }
+.invoice-paper.pdf-export .reference-vehicle-table td { height: 11mm; font-size: 11.5px; }
+.invoice-paper.pdf-export .reference-signatures { margin-top: 22mm; }
+.invoice-paper.pdf-export .reference-signatures > div { min-height: 18mm; }
+.invoice-paper.pdf-export .reference-signatures span { font-size: 11px; }
 
 @media print {
   @page { size: A4 portrait; margin: 0; }
@@ -118,7 +133,7 @@
     width: 210mm;
     height: 297mm;
     min-height: 297mm;
-    padding: var(--invoice-top-margin) 0 12mm;
+    padding: var(--invoice-top-margin) 0 8mm;
     overflow: hidden;
     box-shadow: none;
     break-after: avoid;
@@ -133,5 +148,20 @@
     page-break-inside: avoid;
     transform: scale(var(--invoice-export-scale));
     transform-origin: top center;
+    font-size: 12px;
   }
+  .reference-title { font-size: 16px; }
+  .reference-gst { margin-top: 3mm; }
+  .reference-customer { margin-top: 9mm; }
+  .reference-gst > div,
+  .reference-customer > div > div { min-height: 7mm; }
+  .reference-customer .address-row { min-height: 18mm; }
+  .reference-main-table thead th { height: 11mm; font-size: 13px; }
+  .reference-main-table tbody td { height: 8.8mm; padding-block: 3px; font-size: 12px; }
+  .reference-main-table tfoot th,
+  .reference-main-table tfoot td { height: 5.5mm; font-size: 12px; }
+  .reference-vehicle-table td { height: 11mm; font-size: 11.5px; }
+  .reference-signatures { margin-top: 22mm; }
+  .reference-signatures > div { min-height: 18mm; }
+  .reference-signatures span { font-size: 11px; }
 }

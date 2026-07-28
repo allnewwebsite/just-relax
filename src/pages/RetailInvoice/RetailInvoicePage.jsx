@@ -43,8 +43,8 @@ export default function RetailInvoicePage({ mode }) {
     const content = paper.querySelector(".invoice-content");
     const topMargin = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--invoice-top-margin")) || 60;
     const pixelsPerMm = paper.getBoundingClientRect().width / 210;
-    const availableHeight = (297 - topMargin - 12) * pixelsPerMm;
-    const targetHeight = availableHeight * 0.93;
+    const availableHeight = (297 - topMargin - 8) * pixelsPerMm;
+    const targetHeight = availableHeight * 0.95;
     const scale = Math.min(1.07, Math.max(0.9, targetHeight / content.scrollHeight));
     paper.style.setProperty("--invoice-export-scale", scale.toFixed(4));
   }, []);
