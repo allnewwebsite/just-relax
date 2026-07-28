@@ -38,10 +38,25 @@
 .invoice-list-head { padding: 12px 16px; background: #f8fafc; color: #64748b; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
 .invoice-list-row { min-height: 65px; padding: 10px 16px; border-top: 1px solid #f1f5f9; background: white; font-size: 13px; contain: layout paint; }
 .invoice-list-row:hover { background: #fafcff; }
-.stock-table { width: 100%; min-width: 1320px; border-collapse: collapse; font-size: 12px; }
-.stock-table th:first-child, .stock-table td:first-child { width: 52px; }
-.stock-table th { padding: 11px 12px; background: #f8fafc; color: #64748b; font-size: 9px; font-weight: 700; text-align: left; text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
-.stock-table td { padding: 12px; border-top: 1px solid #f1f5f9; white-space: nowrap; }
+.stock-table { width: 100%; min-width: 1320px; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.stock-col-serial { width: 4%; }
+.stock-col-location { width: 7%; }
+.stock-col-register { width: 8%; }
+.stock-col-model { width: 8%; }
+.stock-col-vin { width: 11%; }
+.stock-col-engine { width: 10%; }
+.stock-col-key { width: 6%; }
+.stock-col-color { width: 6%; }
+.stock-col-variant { width: 9%; }
+.stock-col-age { width: 8%; }
+.stock-col-hold { width: 8%; }
+.stock-col-pdi { width: 7%; }
+.stock-col-actions { width: 8%; }
+.stock-table th { height: 42px; padding: 0 12px; background: #f8fafc; color: #64748b; font-size: 9px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+.stock-table td { height: 56px; max-width: 0; overflow: hidden; padding: 0 12px; border-top: 1px solid #f1f5f9; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.stock-table td[colspan] { max-width: none; }
+.stock-table th:nth-child(9), .stock-table td:nth-child(9),
+.stock-table th:nth-child(11), .stock-table td:nth-child(11) { text-align: left; }
 .stock-table tbody tr:hover { background: #fafcff; }
 .stock-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 .stock-badge-green { background: #ecfdf5; color: #047857; }
