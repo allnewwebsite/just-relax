@@ -1,6 +1,9 @@
 export const HYUNDAI_MODELS = Object.freeze([
   "EXTER", "AURA", "AURA PRIME", "GRAND i10 NIOS", "i20", "CRETA", "VENUE", "VERNA", "ALCAZAR",
 ]);
+export const MODEL_TAB_ORDER = Object.freeze([
+  "EXTER", "AURA", "AURA PRIME", "GRAND i10 NIOS", "i20", "VENUE", "CRETA", "VERNA", "ALCAZAR",
+]);
 export const LOCATIONS = Object.freeze(["Showroom", "Parking"]);
 export const PDI_STATUSES = Object.freeze(["Done", "Not Done"]);
 export const emptyVehicle = {
