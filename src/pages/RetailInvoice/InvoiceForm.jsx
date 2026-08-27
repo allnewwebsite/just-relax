@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { Controller, useFormState } from "react-hook-form";
 import { sections } from "./invoiceFields";
 import { calculateInvoice, formatIndianCurrency, parseCurrency } from "../../utils/invoiceCalculator";
-import { formatDateDDMMYYYY, normalizeDateInput } from "../../utils/date";
+import DateField from "../../components/DateField";
 
 function InvoiceForm({ register, control, disabled, getValues }) {
   const { errors } = useFormState({ control });
@@ -32,7 +32,7 @@ function InvoiceForm({ register, control, disabled, getValues }) {
                   : type === "readonly"
                   ? <input readOnly className="field-input bg-slate-50" {...register(name)} />
                   : type === "date"
-                  ? <Controller name={name} control={control} rules={{ required: required && label + " is required" }} render={({ field }) => <input disabled={disabled} type="text" inputMode="numeric" placeholder="DD-MM-YYYY" className="field-input" value={formatDateDDMMYYYY(field.value)} onChange={(event) => field.onChange(normalizeDateInput(event.target.value))} onBlur={field.onBlur} ref={field.ref} />} />
+                  ? <Controller name={name} control={control} rules={{ required: required && label + " is required" }} render={({ field }) => <DateField field={field} disabled={disabled} />} />
                   : (() => {
                     const registration = register(name, {
                       required: required && `${label} is required`,

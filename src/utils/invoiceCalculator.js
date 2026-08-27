@@ -43,18 +43,23 @@ function threeDigitWords(value) {
   return words.join(" ");
 }
 
-export function amountInIndianWords(value) {
-  let number = Math.max(0, Math.round(parseCurrency(value)));
-  if (number === 0) return "Rupees Zero Only.";
+function indianNumberWords(value) {
+  let number = value;
   const words = [];
   for (const [size, label] of [[10_000_000, "Crore"], [100_000, "Lakh"], [1_000, "Thousand"]]) {
     if (number >= size) {
-      words.push(`${threeDigitWords(Math.floor(number / size))} ${label}`);
+      words.push(`${indianNumberWords(Math.floor(number / size))} ${label}`);
       number %= size;
     }
   }
   if (number) words.push(threeDigitWords(number));
-  return `Rupees ${words.join(" ")} Only.`;
+  return words.join(" ");
+}
+
+export function amountInIndianWords(value) {
+  let number = Math.max(0, Math.round(parseCurrency(value)));
+  if (number === 0) return "Rupees Zero Only.";
+  return `Rupees ${indianNumberWords(number)} Only.`;
 }
 
 export function calculateInvoice(input) {

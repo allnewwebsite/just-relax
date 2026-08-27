@@ -212,3 +212,4 @@
 .stock-module .overflow-x-auto { scrollbar-color: #cbd5e1 transparent; scrollbar-width: thin; }
 .stock-module .overflow-x-auto::-webkit-scrollbar { height: 8px; }
 .stock-module .overflow-x-auto::-webkit-scrollbar-thumb { border-radius: 4px; background: #cbd5e1; }
+.date-picker-native { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 import { CarFront, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { emptyVehicle, HYUNDAI_MODELS, LOCATIONS, PDI_STATUSES } from "./stockConfig";
-import { formatDateDDMMYYYY, normalizeDateInput } from "../../utils/date";
+import DateField from "../../components/DateField";
 
 const fieldClass = "field-input";
 const required = (label) => ({ required: `${label} is required` });
@@ -22,7 +22,7 @@ function VehicleDialog({ mode, vehicle, open, saving, serverError, onClose, onSa
   if (!open) return null;
   const input = (name, label, options = {}) => <div>
     <label className="field-label">{label}{options.required !== false && <span className="ml-1 text-red-500">*</span>}</label>
-    {options.type === "date" ? <Controller name={name} control={control} rules={options.required === false ? {} : required(label)} render={({ field }) => <input disabled={readOnly} type="text" inputMode="numeric" className={fieldClass} placeholder={readOnly ? "" : "DD-MM-YYYY"} value={formatDateDDMMYYYY(field.value)} onChange={(event) => field.onChange(normalizeDateInput(event.target.value))} onBlur={field.onBlur} ref={field.ref} />} /> : <input disabled={readOnly} type="text" className={fieldClass} placeholder={readOnly ? "" : options.placeholder || `Enter ${label.toLowerCase()}`} {...register(name, options.required === false ? {} : required(label))} />}
+    {options.type === "date" ? <Controller name={name} control={control} rules={options.required === false ? {} : required(label)} render={({ field }) => <DateField field={field} disabled={readOnly} className={fieldClass} />} /> : <input disabled={readOnly} type="text" className={fieldClass} placeholder={readOnly ? "" : options.placeholder || `Enter ${label.toLowerCase()}`} {...register(name, options.required === false ? {} : required(label))} />}
     {errors[name] && <p className="field-error">{errors[name].message}</p>}
   </div>;
   const select = (name, label, options) => <div>

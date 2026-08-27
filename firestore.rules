@@ -4,10 +4,16 @@ service cloud.firestore {
     match /invoices/{invoiceId} {
       allow read, create, update, delete: if request.auth != null
         && ((resource == null && request.resource.data.userId == request.auth.uid)
-        || (resource != null && resource.data.userId == request.auth.uid));
+        || (resource != null && resource.data.userId == request.auth.uid && request.resource.data.userId == resource.data.userId));
     }
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.role == 'staff'
+        && request.resource.data.disabled == false;
+      allow update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.disabled == resource.data.disabled;
     }
     match /availableStock/{vehicleId} {
       allow read, create, update, delete: if request.auth != null;
