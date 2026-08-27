@@ -1,5 +1,6 @@
 import { forwardRef, memo } from "react";
 import { formatIndianCurrency } from "../../utils/invoiceCalculator";
+import { formatDateDDMMYYYY } from "../../utils/date";
 
 const Value = ({ children }) => <span className="reference-value">: {children || "\u00a0"}</span>;
 const vehicleText = (data) => [data.vehicleDescription, data.variant, data.colour].filter(Boolean).join(" ");
@@ -24,7 +25,7 @@ const InvoicePreview = memo(forwardRef(function InvoicePreview({ data }, ref) {
           <div><span>Customer Id</span><Value>{data.customerId}</Value></div>
           <div><span>Customer PAN No.</span><Value>{data.panNumber}</Value></div>
           <div><span>Invoice No</span><Value>{data.invoiceNumber}</Value></div>
-          <div><span>Invoice date</span><Value>{data.invoiceDate}</Value></div>
+          <div><span>Invoice date</span><Value>{formatDateDDMMYYYY(data.invoiceDate)}</Value></div>
         </div>
       </div>
       <table className="reference-main-table">

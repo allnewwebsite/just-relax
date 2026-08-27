@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
+import { formatDateDDMMYYYY } from "../../utils/date";
 
 export default function UserManagementPage() {
   const { profile } = useAuth();
@@ -57,7 +58,7 @@ export default function UserManagementPage() {
               <td><p className="font-semibold text-slate-800">{user.displayName || "Unnamed user"}</p><p className="text-xs text-slate-400">{user.email}</p></td>
               <td><span className="inline-flex items-center gap-1.5 text-xs font-semibold capitalize"><ShieldCheck size={14} className={user.role === "admin" ? "text-blue-600" : "text-slate-400"}/>{user.role}</span></td>
               <td><span className={`rounded-full px-2 py-1 text-xs font-semibold ${user.disabled ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-700"}`}>{user.disabled ? "Disabled" : "Active"}</span></td>
-              <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+              <td>{formatDateDDMMYYYY(user.createdAt)}</td>
               <td><div className="flex justify-end gap-2"><select aria-label={`Role for ${user.email}`} value={user.role} onChange={(event) => update(user, { role: event.target.value })} className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs" disabled={user.uid === profile?.uid}><option value="staff">Staff</option><option value="admin">Admin</option></select><button onClick={() => update(user, { disabled: !user.disabled })} disabled={user.uid === profile?.uid} className="secondary-button px-2.5 py-1.5 text-xs">{user.disabled ? "Enable" : "Disable"}</button></div></td>
             </tr>)}
           </tbody></table></div>

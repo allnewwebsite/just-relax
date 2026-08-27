@@ -2,15 +2,16 @@ import { memo, useCallback, useMemo, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Edit3, Eye, Plus, Search, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { formatDateDDMMYYYY } from "../../utils/date";
 
 const InvoiceRow = memo(function InvoiceRow({ item, onDelete, style }) {
   const deleteInvoice = useCallback(() => onDelete(item), [item, onDelete]);
   return <div className="invoice-list-grid invoice-list-row" style={style}>
     <div className="font-semibold text-blue-700">{item.invoiceNumber}</div>
     <div>{item.customerName}</div>
-    <div>{item.invoiceDate}</div>
+    <div>{formatDateDDMMYYYY(item.invoiceDate)}</div>
     <div>{item.panNumber}</div>
-    <div>{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}</div>
+    <div>{formatDateDDMMYYYY(item.createdAt) || ""}</div>
     <div className="flex justify-end gap-1"><Link className="table-action" to={`/invoices/${item.id}`} title="View"><Eye size={16}/></Link><Link className="table-action" to={`/invoices/${item.id}/edit`} title="Edit"><Edit3 size={16}/></Link><button className="table-action hover:text-red-600" onClick={deleteInvoice} title="Delete"><Trash2 size={16}/></button></div>
   </div>;
 });

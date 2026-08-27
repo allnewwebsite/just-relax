@@ -1,4 +1,15 @@
-import { PRICING_CONFIG } from "../config/pricing.js";
+import { PRICING_CONFIG, TAX_CONFIG } from "../config/pricing.js";
+
+export function inferTaxSlab(input = {}) {
+  if (input.taxSlab === "higher" || input.taxSlab === "standard") return input.taxSlab;
+  const state = TAX_CONFIG[input.state] ? input.state : "Delhi";
+  const igst = Number(input.igstRate ?? input.igst);
+  const cgst = Number(input.cgstRate ?? input.cgst);
+  const sgst = Number(input.sgstRate ?? input.sgst);
+  if (state === "Delhi" && igst === TAX_CONFIG.Delhi.higher.igst) return "higher";
+  if (state === "Haryana" && (cgst === TAX_CONFIG.Haryana.higher.cgst || sgst === TAX_CONFIG.Haryana.higher.sgst)) return "higher";
+  return PRICING_CONFIG.defaultTaxSlab;
+}
 
 export function parseCurrency(value) {
   if (typeof value === "number") return Number.isFinite(value) ? value : 0;
@@ -47,8 +58,9 @@ export function amountInIndianWords(value) {
 }
 
 export function calculateInvoice(input) {
-  const state = PRICING_CONFIG.states[input.state] ? input.state : "Delhi";
-  const rates = PRICING_CONFIG.states[state];
+  const state = TAX_CONFIG[input.state] ? input.state : "Delhi";
+  const taxSlab = inferTaxSlab({ ...input, state });
+  const rates = TAX_CONFIG[state][taxSlab];
   const invoiceTotalInput = parseCurrency(input.invoiceTotal);
   const discountInput = parseCurrency(input.discount);
   const compensationCessInput = parseCurrency(input.compensationCess);
@@ -77,6 +89,7 @@ export function calculateInvoice(input) {
 
   return {
     state,
+    taxSlab,
     invoiceTotal,
     priceOfOne,
     discount,
@@ -84,10 +97,13 @@ export function calculateInvoice(input) {
     otherCharges,
     netSellingPrice,
     igst: rates.igst,
+    igstRate: rates.igst,
     igstAmount,
     cgst: rates.cgst,
+    cgstRate: rates.cgst,
     cgstAmount,
     sgst: rates.sgst,
+    sgstRate: rates.sgst,
     sgstAmount,
     totalGst,
     total: invoiceTotal,

@@ -1,8 +1,8 @@
 export const defaultInvoice = {
   dealerName: "DRISHTI MOTORS PVT. LTD.", dealerGst: "06AADCD9217A1Z3", customerGst: "", customerName: "", customerAddress: "", customerId: "",
   panNumber: "", invoiceNumber: "", invoiceDate: "", financedBy: "", vehicleDescription: "",
-  variant: "", colour: "", state: "Delhi", invoiceTotal: "", priceOfOne: "", discount: "0", netSellingPrice: "", igst: "", igstAmount: "",
-  cgst: "", cgstAmount: "", sgst: "", sgstAmount: "", totalGst: "", compensationCess: "0", otherCharges: "0",
+  variant: "", colour: "", state: "Delhi", taxSlab: "standard", invoiceTotal: "", priceOfOne: "", discount: "0", netSellingPrice: "", igst: "", igstRate: "", igstAmount: "",
+  cgst: "", cgstRate: "", cgstAmount: "", sgst: "", sgstRate: "", sgstAmount: "", totalGst: "", compensationCess: "0", otherCharges: "0",
   applyTcs: false, total: "", tcs: "", grandTotal: "", amountInWords: "", vinNumber: "",
   chassisNumber: "", engineNumber: "", keyNumber: "", hsnNumber: "",
   customerSignature: "", authorizedSignature: "",
@@ -22,7 +22,7 @@ export const sections = [
     ["vehicleDescription", "Vehicle Description", true], ["variant", "Variant"], ["colour", "Colour"],
   ]},
   { title: "Pricing", fields: [
-    ["state", "State", true, "select"], ["invoiceTotal", "Invoice Total (Including GST)", true, "money"],
+    ["state", "State", true, "select"], ["taxSlab", "Tax Slab", true, "tax-slab"], ["invoiceTotal", "Invoice Total (Including GST)", true, "money"],
     ["discount", "Discount", false, "money"], ["compensationCess", "Compensation Cess", false, "money"],
     ["otherCharges", "Other Charges", false, "money"], ["applyTcs", "Apply TCS (1%)", false, "checkbox"],
     ["priceOfOne", "Price of One", false, "readonly"], ["netSellingPrice", "Net Selling Price", false, "readonly"],

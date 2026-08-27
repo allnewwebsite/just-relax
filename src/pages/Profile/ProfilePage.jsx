@@ -1,9 +1,8 @@
 import { CalendarDays, KeyRound, Mail, ShieldCheck, UserRound } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { formatDateDDMMYYYY } from "../../utils/date";
 
-const formatDate = (value) => value
-  ? new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value))
-  : "Not available";
+const formatDate = (value) => value ? formatDateDDMMYYYY(value) : "Not available";
 
 export default function ProfilePage() {
   const { user, profile } = useAuth();

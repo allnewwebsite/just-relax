@@ -8,6 +8,7 @@ import InvoiceList from "./InvoiceList";
 import InvoicePreviewLive from "./InvoicePreviewLive";
 import { defaultInvoice } from "./invoiceFields";
 import PricingCalculatorSync from "./PricingCalculatorSync";
+import { calculateInvoice, inferTaxSlab } from "../../utils/invoiceCalculator";
 
 export default function RetailInvoicePage({ mode }) {
   const { id } = useParams();
@@ -33,6 +34,7 @@ export default function RetailInvoicePage({ mode }) {
     if (id) api.get(`/invoices/${id}`).then(({ data: invoice }) => reset({
       ...defaultInvoice,
       ...invoice,
+      taxSlab: inferTaxSlab(invoice),
       dealerName: invoice.dealerName || defaultInvoice.dealerName,
       dealerGst: invoice.dealerGst || defaultInvoice.dealerGst,
     })).catch(() => setMessage("Invoice could not be loaded."));
@@ -63,8 +65,16 @@ export default function RetailInvoicePage({ mode }) {
   const save = async (values) => {
     try {
       setSaving(true);
-      if (mode === "edit") await api.put(`/invoices/${id}`, values);
-      else await api.post("/invoices", values);
+      const calculation = calculateInvoice(values);
+      const invoice = {
+        ...values,
+        taxSlab: calculation.taxSlab,
+        igstRate: calculation.igstRate,
+        cgstRate: calculation.cgstRate,
+        sgstRate: calculation.sgstRate,
+      };
+      if (mode === "edit") await api.put(`/invoices/${id}`, invoice);
+      else await api.post("/invoices", invoice);
       navigate("/invoices");
     } catch (error) {
       setMessage(error.response?.data?.message || "Invoice could not be saved.");

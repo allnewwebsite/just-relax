@@ -1,8 +1,9 @@
 import { memo } from "react";
 import { ChevronDown } from "lucide-react";
-import { useFormState } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 import { sections } from "./invoiceFields";
 import { calculateInvoice, formatIndianCurrency, parseCurrency } from "../../utils/invoiceCalculator";
+import { formatDateDDMMYYYY, normalizeDateInput } from "../../utils/date";
 
 function InvoiceForm({ register, control, disabled, getValues }) {
   const { errors } = useFormState({ control });
@@ -19,14 +20,19 @@ function InvoiceForm({ register, control, disabled, getValues }) {
                 {type !== "checkbox" && <label className="field-label">{label}{required && <span className="ml-1 text-red-500">*</span>}</label>}
                 {type === "checkbox"
                   ? <label className="flex min-h-[42px] cursor-pointer items-center gap-3 rounded-lg border border-slate-200 px-3.5 text-sm font-semibold text-slate-700"><input disabled={disabled} type="checkbox" className="h-4 w-4 rounded border-slate-300 text-blue-700 focus:ring-blue-500" {...register(name)} /><span>{label}</span></label>
-                  : type === "select"
-                  ? <select disabled={disabled} className="field-input" {...register(name, { required: `${label} is required` })}><option value="">Select state</option><option value="Delhi">Delhi</option><option value="Haryana">Haryana</option></select>
+                  : type === "select" || type === "tax-slab"
+                  ? <select disabled={disabled} className="field-input" {...register(name, { required: `${label} is required` })}>
+                    <option value="">Select {type === "tax-slab" ? "tax slab" : "state"}</option>
+                    {type === "tax-slab" ? <><option value="standard">Standard - 18%</option><option value="higher">Higher - 40%</option></> : <><option value="Delhi">Delhi</option><option value="Haryana">Haryana</option></>}
+                  </select>
                   : type === "textarea"
                   ? <textarea disabled={disabled} rows="3" className="field-input resize-none" placeholder={`Enter ${label.toLowerCase()}`} {...register(name, { required: required && `${label} is required` })} />
                   : type === "readonly-textarea"
                   ? <textarea readOnly rows="3" className="field-input resize-none bg-slate-50" {...register(name)} />
                   : type === "readonly"
                   ? <input readOnly className="field-input bg-slate-50" {...register(name)} />
+                  : type === "date"
+                  ? <Controller name={name} control={control} rules={{ required: required && label + " is required" }} render={({ field }) => <input disabled={disabled} type="text" inputMode="numeric" placeholder="DD-MM-YYYY" className="field-input" value={formatDateDDMMYYYY(field.value)} onChange={(event) => field.onChange(normalizeDateInput(event.target.value))} onBlur={field.onBlur} ref={field.ref} />} />
                   : (() => {
                     const registration = register(name, {
                       required: required && `${label} is required`,
