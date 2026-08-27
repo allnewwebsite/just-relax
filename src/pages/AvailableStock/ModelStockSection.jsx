@@ -17,8 +17,8 @@ const StockRow = memo(function StockRow({ vehicle, index, onView, onEdit, onRemo
     <div title={vehicle.variant}>{vehicle.variant}</div>
     <div title={formatStockDate(vehicle.vehicleAge)}>{formatStockDate(vehicle.vehicleAge)}</div>
     <div title={vehicle.holdBy || "—"}>{vehicle.holdBy || "—"}</div>
-    <div><span className={`stock-badge ${vehicle.pdiStatus === "Done" ? "stock-badge-blue" : "stock-badge-amber"}`}>{vehicle.pdiStatus}</span></div>
-    <div className="flex justify-center gap-1"><button className="table-action" onClick={view} title="View"><Eye size={16}/></button><button className="table-action" onClick={edit} title="Edit"><Edit3 size={16}/></button><button className="table-action hover:text-red-600" onClick={remove} title="Remove"><Trash2 size={16}/></button></div>
+    <div><span className="stock-badge stock-badge-neutral">{vehicle.pdiStatus}</span></div>
+    <div className="flex justify-center gap-1"><button className="table-action stock-action-button" onClick={view} title="View"><Eye size={16}/></button><button className="table-action stock-action-button" onClick={edit} title="Edit"><Edit3 size={16}/></button><button className="table-action stock-action-button" onClick={remove} title="Remove"><Trash2 size={16}/></button></div>
   </div>;
 });
 

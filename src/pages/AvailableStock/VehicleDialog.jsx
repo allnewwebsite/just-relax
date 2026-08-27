@@ -31,7 +31,7 @@ function VehicleDialog({ mode, vehicle, open, saving, serverError, onClose, onSa
     {errors[name] && <p className="field-error">{errors[name].message}</p>}
   </div>;
   return <div className="dialog-backdrop overflow-y-auto py-6" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-    <section className="my-auto w-full max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="vehicle-dialog-title">
+    <section className="stock-dialog-card my-auto w-full max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="vehicle-dialog-title">
       <header className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
         <div className="grid h-9 w-9 place-items-center rounded-lg bg-blue-50 text-blue-700"><CarFront size={18}/></div>
         <div><h2 id="vehicle-dialog-title" className="font-bold text-navy">{mode === "view" ? "Vehicle details" : mode === "edit" ? "Edit vehicle" : "Add vehicle"}</h2><p className="text-xs text-slate-400">{readOnly ? "Available stock record" : "Enter the vehicle stock information."}</p></div>

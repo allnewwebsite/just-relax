@@ -80,15 +80,15 @@ export default function AvailableStockPage() {
 
   const setDebouncedSearch = useCallback((value) => setSearch(value), []);
 
-  return <div className="p-[clamp(1rem,2vw,1.75rem)]">
+  return <div className="stock-module p-[clamp(1rem,2vw,1.75rem)]">
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div><p className="eyebrow">Vehicle inventory</p><h1 className="page-title">Available Stock</h1><p className="page-subtitle">Manage all available Hyundai vehicles.</p></div>
-      <button onClick={openAddDialog} className="primary-button"><Plus size={17}/> Add Vehicle</button>
+      <button onClick={openAddDialog} className="primary-button stock-primary-button"><Plus size={17}/> Add Vehicle</button>
     </div>
-    {message && <div className="mb-4 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700">{message}</div>}
-    <section className="rounded-2xl border border-slate-200 bg-white">
+    {message && <div className="stock-message mb-4 rounded-lg px-4 py-3 text-sm">{message}</div>}
+    <section className="stock-shell rounded-2xl border border-slate-200 bg-white">
       <StockToolbar total={displayedTotal} carModel={carModel} onModelChange={setCarModel} onSearchChange={setDebouncedSearch}/>
-      <div className="space-y-4 bg-slate-50/60 p-4">
+      <div className="stock-content space-y-4 bg-slate-50/60 p-4">
         {loading ? <div className="rounded-xl border border-slate-200 bg-white py-16 text-center text-sm text-slate-400">Loading available stock…</div> : normalizedSearch && !hasResults ? <div className="rounded-xl border border-slate-200 bg-white py-16 text-center"><CarFront size={28} className="mx-auto mb-2 text-slate-300"/><p className="font-semibold text-slate-600">No matching vehicles</p><p className="mt-1 text-sm text-slate-400">No vehicles in the selected model match your search.</p></div> : displayedModels.map((model) => <ModelStockSection key={model} model={model} vehicles={displayedGroups[model]} onView={viewVehicle} onEdit={editVehicle} onRemove={setRemoveTarget}/>)}
       </div>
     </section>

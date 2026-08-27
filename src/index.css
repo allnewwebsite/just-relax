@@ -179,3 +179,36 @@
   .reference-signatures > div { min-height: 18mm; }
   .reference-signatures span { font-size: 11px; }
 }
+
+/* Available Stock: restrained ERP presentation, scoped to the stock module. */
+.stock-module .eyebrow,
+.stock-module .page-subtitle { color: #6b7280; }
+.stock-module .page-title { color: #111827; }
+.stock-primary-button { border: 1px solid #111827; border-radius: 7px; background: #111827; box-shadow: none; }
+.stock-primary-button:hover { background: #000; }
+.stock-shell { border-radius: 8px; box-shadow: none; }
+.stock-content { background: #f8fafc; }
+.stock-toolbar { gap: 12px; padding: 14px 16px; }
+.stock-toolbar .field-input { height: 40px; border-color: #d1d5db; border-radius: 6px; box-shadow: none; }
+.stock-toolbar .field-input:focus { border-color: #6b7280; box-shadow: 0 0 0 2px #e5e7eb; }
+.stock-model-section { border-color: #d1d5db; border-radius: 8px; box-shadow: none; }
+.stock-model-heading { border-left: 0; padding: 12px 14px; }
+.stock-model-heading h2 { color: #1f2937; }
+.stock-model-heading span { min-width: 22px; height: 20px; background: #f3f4f6; color: #4b5563; }
+.stock-register-head { background: #f3f4f6; color: #6b7280; }
+.stock-register-row { background: #fff; border-color: #edf0f2; }
+.stock-register-row:hover { background: #f9fafb; }
+.stock-badge-neutral { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+.stock-action-button:hover { background: #f3f4f6; color: #1f2937; }
+.stock-message { border: 1px solid #d1d5db; background: #f3f4f6; color: #374151; }
+.stock-module .dialog-card,
+.stock-module .stock-dialog-card { border-radius: 10px; box-shadow: 0 12px 30px rgba(17,24,39,.12); }
+.stock-module .bg-red-50 { background: #f3f4f6; }
+.stock-module .text-red-600 { color: #374151; }
+.stock-module .bg-red-600 { background: #1f2937; }
+.stock-module button.bg-red-600:hover { background: #111827; }
+.stock-module .hover\\:bg-red-700:hover { background: #111827; }
+.stock-module .field-input:focus { border-color: #6b7280; box-shadow: 0 0 0 2px #e5e7eb; }
+.stock-module .overflow-x-auto { scrollbar-color: #cbd5e1 transparent; scrollbar-width: thin; }
+.stock-module .overflow-x-auto::-webkit-scrollbar { height: 8px; }
+.stock-module .overflow-x-auto::-webkit-scrollbar-thumb { border-radius: 4px; background: #cbd5e1; }
