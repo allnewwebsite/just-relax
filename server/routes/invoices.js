@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { createInvoice, deleteInvoice, getInvoice, listInvoices, updateInvoice } from "../controllers/invoiceController.js";
+import { createMarginMoney, getMarginMoney, updateMarginMoney } from "../controllers/marginMoneyController.js";
 const router = Router();
 router.get("/", listInvoices);
+router.get("/:id/margin-money", getMarginMoney);
+router.post("/:id/margin-money", createMarginMoney);
+router.put("/:id/margin-money", updateMarginMoney);
 router.get("/:id", getInvoice);
 router.post("/", createInvoice);
 router.put("/:id", updateInvoice);

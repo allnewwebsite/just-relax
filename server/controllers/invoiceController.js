@@ -1,4 +1,5 @@
 import { db } from "../config/firebase.js";
+import { ensureMarginMoney } from "./marginMoneyController.js";
 
 const collection = () => {
   if (!db) throw new Error("Firebase Admin is not configured.");
@@ -28,6 +29,7 @@ export async function createInvoice(req, res, next) {
   try {
     const now = new Date();
     const doc = await collection().add({ ...req.body, userId: req.user.uid, createdAt: now, updatedAt: now });
+    await ensureMarginMoney(doc.id, { id: doc.id, ...req.body, userId: req.user.uid }, req.user.uid);
     res.status(201).json({ id: doc.id });
   } catch (error) { next(error); }
 }

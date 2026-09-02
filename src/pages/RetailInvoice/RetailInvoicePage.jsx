@@ -113,6 +113,7 @@ export default function RetailInvoicePage({ mode }) {
         <div className="mr-auto"><h1 className="font-bold text-navy">{viewing ? "Invoice details" : mode === "edit" ? "Edit invoice" : "New retail invoice"}</h1><p className="text-xs text-slate-400">{viewing ? "Saved retail invoice" : "Complete the fields and review the live preview"}</p></div>
         {message && <span className="text-sm text-red-600">{message}</span>}
         {viewing && <Link to={`/invoices/${id}/edit`} className="secondary-button"><Edit3 size={16}/> Edit</Link>}
+        {viewing && <Link to={`/invoices/${id}/margin-money`} className="secondary-button">Margin Money / Receipt</Link>}
         <button onClick={() => window.print()} className="secondary-button"><Printer size={16}/> Print</button>
         <button onClick={downloadPdf} className="secondary-button"><Download size={16}/> PDF</button>
         {!viewing && <button onClick={handleSubmit(save)} disabled={saving} className="primary-button"><Save size={16}/>{saving ? "Saving…" : "Save invoice"}</button>}

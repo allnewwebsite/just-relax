@@ -8,6 +8,7 @@ const RetailInvoicePage = lazy(() => import("./pages/RetailInvoice/RetailInvoice
 const UserManagementPage = lazy(() => import("./pages/Users/UserManagementPage"));
 const ProfilePage = lazy(() => import("./pages/Profile/ProfilePage"));
 const AvailableStockPage = lazy(() => import("./pages/AvailableStock/AvailableStockPage"));
+const MarginMoneyPage = lazy(() => import("./pages/MarginMoney/MarginMoneyPage"));
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/invoices" element={<RetailInvoicePage />} />
             <Route path="/invoices/new" element={<RetailInvoicePage mode="new" />} />
+            <Route path="/invoices/:id/margin-money" element={<MarginMoneyPage />} />
             <Route path="/invoices/:id" element={<RetailInvoicePage mode="view" />} />
             <Route path="/invoices/:id/edit" element={<RetailInvoicePage mode="edit" />} />
             <Route path="/users" element={<UserManagementPage />} />
