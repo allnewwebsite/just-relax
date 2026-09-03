@@ -5,6 +5,24 @@ const collection = () => {
   return db.collection("marginMoney");
 };
 
+const formatLocalISODate = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const defaultReceiptValues = (overrides = {}) => ({
+  receiptDate: formatLocalISODate(),
+  paymentMode: "",
+  transactionNumber: "",
+  transactionDate: formatLocalISODate(),
+  drawnOn: "Axis Bank Ltd",
+  amount: 0,
+  onAccountOf: "Balance payment",
+  ...overrides,
+});
+
 const invoiceFields = (invoice) => ({
   dealerGst: invoice.dealerGst || "",
   customerId: invoice.customerId || "",
@@ -29,7 +47,12 @@ export async function ensureMarginMoney(invoiceId, invoice, uid) {
     const existing = await transaction.get(ref);
     if (existing.exists) return;
     const now = new Date();
-    transaction.create(ref, { invoiceId, ...invoiceFields(invoice), receiptNumber: receiptNumber(invoiceId, now), receiptDate: "", paymentMode: "", transactionNumber: "", transactionDate: "", drawnOn: "", amount: 0, onAccountOf: "", createdAt: now, updatedAt: now, createdBy: uid });
+    const defaults = defaultReceiptValues({
+      invoiceId,
+      ...invoiceFields(invoice),
+      receiptNumber: receiptNumber(invoiceId, now),
+    });
+    transaction.create(ref, { ...defaults, createdAt: now, updatedAt: now, createdBy: uid });
   });
   return ref.id;
 }
@@ -67,6 +90,10 @@ export async function updateMarginMoney(req, res, next) {
     if (!(await ref.get()).exists) await ensureMarginMoney(req.params.id, result.invoice, req.user.uid);
     const allowed = ["receiptDate", "paymentMode", "transactionNumber", "transactionDate", "drawnOn", "amount", "onAccountOf"];
     const changes = Object.fromEntries(allowed.filter((field) => Object.prototype.hasOwnProperty.call(req.body, field)).map((field) => [field, field === "amount" ? Math.max(0, Math.round(Number(req.body[field]) || 0)) : String(req.body[field] || "").trim()]));
+    if (!changes.drawnOn) changes.drawnOn = "Axis Bank Ltd";
+    if (!changes.onAccountOf) changes.onAccountOf = "Balance payment";
+    if (!changes.receiptDate) changes.receiptDate = formatLocalISODate();
+    if (!changes.transactionDate) changes.transactionDate = formatLocalISODate();
     await ref.update({ ...changes, updatedAt: new Date() });
     res.json(serialize(await ref.get(), result.invoice));
   } catch (error) { next(error); }

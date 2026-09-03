@@ -1,3 +1,33 @@
+export function getCurrentLocalDateISO(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function getDefaultReceiptValues(overrides = {}) {
+  const today = getCurrentLocalDateISO();
+  return {
+    dealerGst: "",
+    customerId: "",
+    customerName: "",
+    customerAddress: "",
+    model: "",
+    variant: "",
+    hypothecation: "Not applicable",
+    dealerName: "",
+    receiptNumber: "",
+    receiptDate: today,
+    paymentMode: "",
+    transactionNumber: "",
+    transactionDate: today,
+    drawnOn: "Axis Bank Ltd",
+    amount: 0,
+    onAccountOf: "Balance payment",
+    ...overrides,
+  };
+}
+
 export function formatDateDDMMYYYY(value) {
   if (!value) return "";
   const text = String(value);

@@ -4,21 +4,22 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import DateField from "../../components/DateField";
+import { getDefaultReceiptValues } from "../../utils/date";
 import { amountInIndianWords, formatIndianCurrency, parseCurrency } from "../../utils/invoiceCalculator";
 import MarginMoneyPreview from "./MarginMoneyPreview";
 
-const defaults = { dealerGst: "", customerId: "", customerName: "", customerAddress: "", model: "", variant: "", hypothecation: "Not applicable", dealerName: "", receiptNumber: "", receiptDate: "", paymentMode: "", transactionNumber: "", transactionDate: "", drawnOn: "", amount: 0, onAccountOf: "" };
+const createDefaults = () => getDefaultReceiptValues();
 
 export default function MarginMoneyPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const previewRef = useRef(null);
-  const [record, setRecord] = useState(defaults);
+  const [record, setRecord] = useState(createDefaults());
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const { register, control, reset, handleSubmit, getValues } = useForm({ defaultValues: defaults });
+  const { register, control, reset, handleSubmit, getValues } = useForm({ defaultValues: createDefaults() });
   const amountRegistration = register("amount");
   const watchedValues = useWatch({ control });
   const watchedAmount = watchedValues.amount;
@@ -34,7 +35,7 @@ export default function MarginMoneyPage() {
         if (error.response?.status !== 404) throw error;
         data = (await api.post(`/invoices/${id}/margin-money`)).data;
       }
-      const next = { ...defaults, ...data, amount: Number(data.amount) || 0 };
+      const next = { ...createDefaults(), ...data, amount: Number(data.amount) || 0 };
       setRecord(next); reset(next); setEditing(next.amount === 0 && !next.receiptDate);
     } catch (error) { setMessage(error.response?.data?.message || "Receipt could not be loaded."); }
     finally { setLoading(false); }
@@ -44,8 +45,16 @@ export default function MarginMoneyPage() {
   const save = async (values) => {
     try {
       setSaving(true); setMessage("");
-      const data = (await api.put(`/invoices/${id}/margin-money`, { ...values, amount: Math.max(0, Math.round(parseCurrency(values.amount))) })).data;
-      const next = { ...defaults, ...data, amount: Number(data.amount) || 0 };
+      const normalizedValues = {
+        ...values,
+        receiptDate: values.receiptDate || getDefaultReceiptValues().receiptDate,
+        transactionDate: values.transactionDate || getDefaultReceiptValues().transactionDate,
+        drawnOn: values.drawnOn || "Axis Bank Ltd",
+        onAccountOf: values.onAccountOf || "Balance payment",
+        amount: Math.max(0, Math.round(parseCurrency(values.amount))),
+      };
+      const data = (await api.put(`/invoices/${id}/margin-money`, normalizedValues)).data;
+      const next = { ...createDefaults(), ...data, amount: Number(data.amount) || 0 };
       setRecord(next); reset(next); setEditing(false);
     } catch (error) { setMessage(error.response?.data?.message || "Receipt could not be saved."); }
     finally { setSaving(false); }
@@ -83,7 +92,7 @@ export default function MarginMoneyPage() {
           <div><label className="field-label">Receipt Number</label><input readOnly className="field-input bg-slate-50" value={record.receiptNumber} /></div>
           <div><label className="field-label">Receipt Date</label><Controller name="receiptDate" control={control} render={({ field }) => <DateField field={field} disabled={!editing} />} /></div>
           <div><label className="field-label">Payment Mode</label><select disabled={!editing} className="field-input" {...register("paymentMode")}><option value="">Select payment mode</option><option>Cash</option><option>RTGS/NEFT/IMPS</option><option>Cheque</option><option>Other</option></select></div>
-          <div><label className="field-label">Cheque / Transaction No.</label><input disabled={!editing} className="field-input" {...register("transactionNumber")} /></div>
+          <div><label className="field-label">Cheque/Transaction No.</label><input disabled={!editing} className="field-input" {...register("transactionNumber")} /></div>
           <div><label className="field-label">Cheque / Trans. Date</label><Controller name="transactionDate" control={control} render={({ field }) => <DateField field={field} disabled={!editing} />} /></div>
           <div><label className="field-label">Drawn On</label><input disabled={!editing} className="field-input" {...register("drawnOn")} /></div>
           <div><label className="field-label">Margin Money / Total Deposit</label><input disabled={!editing} className="field-input" inputMode="numeric" value={formatIndianCurrency(watchedAmount || 0)} {...amountRegistration} onChange={(event) => { event.target.value = event.target.value.replace(/\D/g, ""); amountRegistration.onChange(event); }} /></div>
