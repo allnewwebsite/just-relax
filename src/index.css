@@ -230,7 +230,13 @@
 .receipt-signature p { margin: 0 0 13mm; }
 .receipt-signature div { letter-spacing: .05em; }
 .receipt-signature span { display: block; margin-top: 1mm; }
-
+.receipt-paper.receipt-pdf-export {
+  height: 297mm;
+  min-height: 297mm;
+  padding: var(--receipt-print-top-padding) 18mm 14mm;
+  overflow: hidden;
+  box-shadow: none;
+}
 @media print {
   .receipt-workspace .receipt-editor-grid { display: block !important; padding: 0 !important; }
   .receipt-workspace .receipt-form-panel { display: none !important; }
