@@ -5,7 +5,7 @@
 :root {
   --invoice-top-margin: 60mm;
   --invoice-export-scale: 1;
-  --receipt-print-top-padding: 26mm;
+  --receipt-print-top-padding: 42mm;
 }
 
 @layer base {
