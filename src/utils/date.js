@@ -16,7 +16,7 @@ export function getDefaultReceiptValues(overrides = {}) {
     variant: "",
     hypothecation: "Not applicable",
     dealerName: "",
-    receiptNumber: "",
+    receiptNumber: "PR2026017427",
     receiptDate: today,
     paymentMode: "",
     transactionNumber: "",

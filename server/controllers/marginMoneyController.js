@@ -38,7 +38,7 @@ const getInvoice = async (invoiceId) => {
   return doc.exists ? { id: doc.id, ...doc.data() } : null;
 };
 const canAccess = (req, invoice) => req.userProfile.role === "admin" || invoice.userId === req.user.uid;
-const receiptNumber = (invoiceId, date = new Date()) => "PR" + date.getFullYear() + String(date.getMonth() + 1).padStart(2, "0") + String(date.getDate()).padStart(2, "0") + invoiceId;
+const receiptNumber = () => "PR2026017427";
 const serialize = (doc, invoice) => { const receipt = doc.data(); return { id: doc.id, ...receipt, ...invoiceFields(invoice), dealerGst: receipt.dealerGst ?? invoice.dealerGst ?? "", createdAt: receipt.createdAt?.toDate?.().toISOString() || receipt.createdAt, updatedAt: receipt.updatedAt?.toDate?.().toISOString() || receipt.updatedAt }; };
 
 export async function ensureMarginMoney(invoiceId, invoice, uid) {
@@ -88,7 +88,7 @@ export async function updateMarginMoney(req, res, next) {
     if (result.status) return res.status(result.status).json({ message: result.message });
     const ref = collection().doc(req.params.id);
     if (!(await ref.get()).exists) await ensureMarginMoney(req.params.id, result.invoice, req.user.uid);
-    const allowed = ["dealerGst", "receiptDate", "paymentMode", "transactionNumber", "transactionDate", "drawnOn", "amount", "onAccountOf"];
+    const allowed = ["dealerGst", "receiptNumber", "receiptDate", "paymentMode", "transactionNumber", "transactionDate", "drawnOn", "amount", "onAccountOf"];
     const changes = Object.fromEntries(allowed.filter((field) => Object.prototype.hasOwnProperty.call(req.body, field)).map((field) => [field, field === "amount" ? Math.max(0, Math.round(Number(req.body[field]) || 0)) : String(req.body[field] || "").trim()]));
     if (!changes.drawnOn) changes.drawnOn = "Axis Bank Ltd";
     if (!changes.onAccountOf) changes.onAccountOf = "Balance payment";
